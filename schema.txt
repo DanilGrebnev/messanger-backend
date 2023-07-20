@@ -1,0 +1,19 @@
+messages:
+    -   _id
+    -   author
+    -   partner
+    -   text
+    -   dialog
+    -   unread
+    -   created_at, apdated_at
+
+users:
+    -   _id
+    -   email
+    -   fullname
+    -   avatar
+    -   password (md5)
+    -   confirmed       //подтвердил почту
+    -   confirm_hash    //hash подтверждения
+    -   last_seen
+    -   created_at, apdated_at
