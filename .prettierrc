@@ -1,9 +1,11 @@
 {
     "tabWidth": 4,
-    "arrowParens": "always",
+    "arrowParens": "avoid",
     "printWidth": 80,
     "semi": false,
     "proseWrap": "always",
     "singleAttributePerLine": true,
+    "singleQuote": true,
+    "bracketSameLine": true,
     "bracketSpacing": true
 }

@@ -1,0 +1,1 @@
+export { TController } from './TController'
