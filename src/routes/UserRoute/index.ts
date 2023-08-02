@@ -5,10 +5,12 @@ export const UserRoute = Router()
 
 const UserController = new Controller()
 
-UserRoute.get('/allusers', UserController.getAll)
+UserRoute.get('/all_users', UserController.getAll)
 
-UserRoute.get('/:id', UserController.getOne)
+UserRoute.get(':id', UserController.getOne)
 
 UserRoute.post('/registration', UserController.create)
 
-UserRoute.delete('/:id', UserController.delete)
+UserRoute.put('/update_one/:id', UserController.updateOne)
+
+UserRoute.delete(':id', UserController.delete)

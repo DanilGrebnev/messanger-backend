@@ -1,8 +1,10 @@
-import { Schema, model } from 'mongoose'
-import { UserDTO } from './UserDTO'
+import { Schema, model, Document } from 'mongoose'
 import isEmail from 'validator/lib/isEmail'
+import { UserDTO } from './UserDTO'
 
-const schema = new Schema<UserDTO>(
+type TUserSchema = UserDTO & Document
+
+const schema = new Schema<TUserSchema>(
     {
         email: {
             type: String,
