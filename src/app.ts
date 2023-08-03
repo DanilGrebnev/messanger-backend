@@ -1,15 +1,15 @@
-import express, { Request, Response } from 'express'
+import Express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import { AppConnect } from './lib'
-import { UserRoute } from './routes'
+import { AppConnect, MiddlewareCombine, RouteCombine } from './lib'
+import { routers } from './routes'
 
 dotenv.config()
 
-const app = express()
+const app = Express()
 
-app.use(cors())
-app.use(express.json())
-app.use('/user', UserRoute)
+MiddlewareCombine(app, Express.json(), cors())
+
+RouteCombine(app, routers)
 
 AppConnect(app)
