@@ -8,4 +8,8 @@ const MessageController = new Controller()
 /**
  * Поиск сообщений по id диалога
  */
+MessageRoute.get('/', MessageController.getMessages)
+
 MessageRoute.post('/', MessageController.sendMessage)
+
+MessageRoute.delete('/', MessageController.deleteMessage)

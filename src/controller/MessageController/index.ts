@@ -15,4 +15,29 @@ export class MessageController {
             res.send(error)
         }
     }
+
+    getMessages: TController = async (req, res) => {
+        try {
+            const messages = await MessageModel.find(req.body.dialog)
+            const header = { 'messages-count': messages.length }
+
+            res.set(header)
+
+            res.send(messages)
+        } catch (error) {
+            res.send(error)
+        }
+    }
+
+    deleteMessage: TController = async (req, res) => {
+        try {
+            const response = await MessageModel.findByIdAndRemove(
+                req.body.messageId
+            )
+
+            res.send(response)
+        } catch (err) {
+            res.send(err)
+        }
+    }
 }
