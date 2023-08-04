@@ -1,6 +1,6 @@
-import { UserModel } from '../../schemas'
+import { UserModel } from '../../models'
 import { TController } from '../../types'
-import { UserDTO } from '../../schemas/User/UserDTO'
+import { UserDTO } from '../../types/DTO/UserDTO'
 
 export class UserController {
     /**

@@ -1,19 +1,23 @@
 messages:
     -   _id
-    -   author
-    -   partner
-    -   text
-    -   dialog
-    -   unread
-    -   created_at, apdated_at
+    -   text: string - текст сообщения
+    -   author: string - автор сообщения
+    -   dialog: string - id диалога, к которому будет принадлежать сообщение
+    -   unread: boolean - прочитано сообщение или нет
+    -   created_at, apdated_at: Date - создан, обнавлён (создаётся автоматически)
+
+dialog:
+    -  _id: string - id диалога
+    -  authors: [string, string] - id участников диалога
+    -  created_at, apdated_at : Date - создан, обновлён (создаётся автоматически)
 
 users:
-    -   _id
-    -   email
-    -   fullname
-    -   avatar
+    -   _id: string
+    -   email: string
+    -   fullname: string
+    -   avatar: string 
     -   password (md5)
-    -   confirmed       //подтвердил почту
-    -   confirm_hash    //hash подтверждения
-    -   last_seen
-    -   created_at, apdated_at
+    -   confirmed: Boolean       //подтвердил почту
+    -   confirm_hash: string    //hash подтверждения
+    -   last_seen: Date
+    -   created_at, apdated_at: Date

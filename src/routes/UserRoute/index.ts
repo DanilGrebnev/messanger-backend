@@ -20,7 +20,7 @@ UserRoute.post('/registration', UserController.create)
 /**
  * Изменение пользователя по id
  */
-UserRoute.put('/update_one/:id', UserController.updateOne)
+UserRoute.put('/:id', UserController.updateOne)
 /**
  * Удаление пользователя
  */

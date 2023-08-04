@@ -1,6 +1,6 @@
+import { UserDTO } from '../../types/DTO/UserDTO'
 import { Schema, model, Document } from 'mongoose'
 import isEmail from 'validator/lib/isEmail'
-import { UserDTO } from './UserDTO'
 
 type TUserSchema = UserDTO & Document
 
