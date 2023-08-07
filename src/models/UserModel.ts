@@ -1,4 +1,4 @@
-import { UserDTO } from '../../types/DTO/UserDTO'
+import { UserDTO } from '../types/DTO/UserDTO'
 import { Schema, model, Document } from 'mongoose'
 import isEmail from 'validator/lib/isEmail'
 
@@ -15,11 +15,11 @@ const schema = new Schema<TUserSchema>(
                 message: props => `${props.value} is not a valid email`,
             },
         },
-        fullname: {
+        password: {
             type: String,
             required: true,
         },
-        password: {
+        fullName: {
             type: String,
             required: true,
         },
@@ -27,9 +27,16 @@ const schema = new Schema<TUserSchema>(
             type: Boolean,
             default: false,
         },
-        avatar: String,
-        confirm_hash: String,
-        last_seen: Date,
+        lastSeen: {
+            type: Date,
+            default: new Date(),
+        },
+        isActivated: {
+            type: Boolean,
+            default: false,
+        },
+        activationLink: String,
+        avatar: { type: String, default: '' },
     },
     {
         timestamps: true,

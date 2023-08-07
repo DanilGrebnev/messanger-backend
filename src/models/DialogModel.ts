@@ -1,11 +1,11 @@
-import { DialogDTO } from '../../types/DTO/DialogDTO'
+import { DialogDTO } from '../types/DTO/DialogDTO'
 import { Schema, model, Document } from 'mongoose'
 
 // type TDialogSchema = DialogDTO & Document
 
 const schema = new Schema(
     {
-        authors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+        members: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
         lastMessage: { type: Schema.Types.ObjectId, ref: 'Message' },
     },
     {

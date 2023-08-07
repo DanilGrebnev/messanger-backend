@@ -12,6 +12,6 @@ export const ConnectToDatabase = () => {
         .connect(url, { autoIndex: true })
         .then(() => console.log(`Connect to "${db_name}" database is OK`))
         .catch(error => {
-            console.log({ Message: 'Error connect to DB', error })
+            console.error({ Message: 'Error connect to DB', error })
         })
 }

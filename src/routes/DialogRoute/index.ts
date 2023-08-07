@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { DialogController } from '../../controller'
+import { DialogController } from '../../controllers'
 
 export const DialogRoute = Router()
 

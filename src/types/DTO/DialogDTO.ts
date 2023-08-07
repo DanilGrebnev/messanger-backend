@@ -1,5 +1,5 @@
 export interface DialogDTO {
-    partner: string
-    author: string
-    lastMessage: string
+    senderId: string
+    receiverId: string
+    lastMessage?: string
 }

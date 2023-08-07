@@ -1,12 +1,10 @@
 import { Schema, model } from 'mongoose'
 
-// type TDialogSchema = DialogDTO & Document
-
 const schema = new Schema(
     {
         text: String,
-        author: { type: Schema.Types.ObjectId, ref: 'User' },
-        dialog: { type: Schema.Types.ObjectId, ref: 'Dialog' },
+        senderId: { type: Schema.Types.ObjectId, ref: 'User' },
+        dialogId: { type: Schema.Types.ObjectId, ref: 'Dialog' },
     },
     {
         timestamps: true,

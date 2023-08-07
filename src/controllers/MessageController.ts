@@ -1,10 +1,10 @@
-import { TController } from '../../types'
+import { TController } from '../types'
 
-import { MessageModel } from '../../models/MessageModel'
-import { MessageDTO } from '../../types/DTO/MessageDTO'
+import { MessageModel } from '../models'
+import { MessageDTO } from '../types/DTO'
 
 export class MessageController {
-    sendMessage: TController = async (req, res) => {
+    createMessage: TController = async (req, res) => {
         try {
             const data: MessageDTO = req.body
 
@@ -18,12 +18,13 @@ export class MessageController {
 
     getMessages: TController = async (req, res) => {
         try {
-            const messages = await MessageModel.find(req.body.dialog)
+            const filter = { dialogId: req.params.dialogId }
+
+            const messages = await MessageModel.find(filter)
+
             const header = { 'messages-count': messages.length }
 
-            res.set(header)
-
-            res.send(messages)
+            res.set(header).send(messages)
         } catch (error) {
             res.send(error)
         }
