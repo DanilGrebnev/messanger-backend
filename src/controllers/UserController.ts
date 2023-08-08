@@ -5,6 +5,8 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
+const time15d = 15 * 24 * 60 * 60 * 1000
+
 export class UserController {
     //Получение всех пользователей
     getAll: TController = (req, res) => {
@@ -24,6 +26,7 @@ export class UserController {
         }
     }
 
+    //Активация аккаунта
     activateAccount: TController = async (req, res) => {
         try {
             await UserService.activate(req.params.link)
@@ -39,7 +42,6 @@ export class UserController {
     registration: TController = async (req, res, next) => {
         try {
             const userData = await UserService.registration(req.body)
-            const time15d = 15 * 24 * 60 * 60 * 1000
 
             res.cookie('refreshToken', userData?.refreshToken, {
                 maxAge: time15d,
@@ -54,9 +56,31 @@ export class UserController {
     }
 
     //Авторизация пользователя
-    login: TController = (req, res, next) => {
+    login: TController = async (req, res, next) => {
         try {
-            res.end()
+            const userData = await UserService.login(req.body)
+
+            res.cookie('refreshToken', userData?.refreshToken, {
+                maxAge: time15d,
+                httpOnly: true,
+                // secure:true - когда будем использовать https протокол
+            })
+
+            res.send(userData)
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    //Выход из ккаунта
+    logout: TController = async (req, res, next) => {
+        try {
+            const { refreshToken } = req.cookies
+            const token = await UserService.logout(refreshToken)
+            
+            res.clearCookie('refreshToken')
+
+            res.send(token)
         } catch (err) {
             next(err)
         }

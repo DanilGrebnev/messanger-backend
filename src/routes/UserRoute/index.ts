@@ -20,6 +20,9 @@ UserRoute.get('/activate/:link', UserController.activateAccount)
 //Регистрация пользователя
 UserRoute.post('/registration', UserController.registration)
 
+//Выход из аккаунта
+UserRoute.post('/logout', UserController.logout)
+
 //Авторизация
 UserRoute.post('/login', UserController.login)
 

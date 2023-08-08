@@ -6,6 +6,14 @@ import { TokenService } from './TokenService'
 import { UserDTO } from '../types/DTO'
 import { ApiError } from '../exeptions/apiError'
 
+const returnUserDTO = (user: any) => {
+    return {
+        email: user.email,
+        id: user._id,
+        isActivated: user.isActivated,
+    }
+}
+
 export class Service {
     async registration({ email, password, fullName }: UserDTO) {
         const candidate = await UserModel.findOne({ email })
@@ -30,11 +38,7 @@ export class Service {
 
         await MailService.sendActivationMail(email, link)
 
-        const tokens = TokenService.generateTokens({
-            email: user.email,
-            id: user._id,
-            isActivated: user.isActivated,
-        })
+        const tokens = TokenService.generateTokens(returnUserDTO(user))
 
         await TokenService.saveToken(user._id, tokens.refreshToken)
 
@@ -64,6 +68,38 @@ export class Service {
         }
 
         return user
+    }
+    /**
+     * Сервис авторизации
+     * возвращает пользователя и токены
+     */
+    async login({ email, password }: { email: string; password: string }) {
+        const user = await UserModel.findOne({ email })
+        const errorString = 'Неправильный логин или пароль'
+        if (!user) {
+            throw ApiError.BadRequest(errorString)
+        }
+
+        const isPassEquals = await bcrypt.compare(password, user.password)
+
+        if (!isPassEquals) {
+            throw ApiError.BadRequest(errorString)
+        }
+
+        const userDto = returnUserDTO(user)
+        const tokens = TokenService.generateTokens(userDto)
+
+        await TokenService.saveToken(userDto.id, tokens.refreshToken)
+
+        return { ...tokens, user: userDto }
+    }
+    /**
+     * Удаление токена с базы данных
+     */
+    async logout(refreshToken: string) {
+        const token = await TokenService.removeToken(refreshToken)
+
+        return token
     }
 }
 
