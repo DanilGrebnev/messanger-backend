@@ -1,15 +1,19 @@
-import { UserModel } from '../models'
-import bcrypt from 'bcrypt'
+import { TokenModel, UserModel } from '../models'
 import { v4 as uuidv4 } from 'uuid'
 import { MailService } from './MailService'
 import { TokenService } from './TokenService'
 import { UserDTO } from '../types/DTO'
 import { ApiError } from '../exeptions/apiError'
 
-const returnUserDTO = (user: any) => {
+import bcrypt from 'bcrypt'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const returnUserDTO = (user: UserDTO) => {
     return {
         email: user.email,
-        id: user._id,
+        _id: user._id,
         isActivated: user.isActivated,
     }
 }
@@ -38,7 +42,8 @@ export class Service {
 
         await MailService.sendActivationMail(email, link)
 
-        const tokens = TokenService.generateTokens(returnUserDTO(user))
+        const userDTO = returnUserDTO(user)
+        const tokens = TokenService.generateTokens(userDTO)
 
         await TokenService.saveToken(user._id, tokens.refreshToken)
 
@@ -60,6 +65,12 @@ export class Service {
         await user.save()
     }
 
+    async getAllUsers() {
+        const allUsers = await UserModel.find()
+
+        return allUsers
+    }
+
     async findUser(userId: string) {
         const user = await UserModel.findById(userId)
 
@@ -69,13 +80,27 @@ export class Service {
 
         return user
     }
+
+    async updateOneUser(_id: string, payload: any) {
+        const updatedUser = await UserModel.findByIdAndUpdate(_id, payload, {
+            new: true,
+        })
+
+        if (!updatedUser) {
+            throw ApiError.BadRequest('Пользователя не существует')
+        }
+
+        return updatedUser
+    }
+
     /**
      * Сервис авторизации
      * возвращает пользователя и токены
      */
-    async login({ email, password }: { email: string; password: string }) {
+    async login({ email, password }: ILoginProps) {
         const user = await UserModel.findOne({ email })
         const errorString = 'Неправильный логин или пароль'
+
         if (!user) {
             throw ApiError.BadRequest(errorString)
         }
@@ -89,10 +114,11 @@ export class Service {
         const userDto = returnUserDTO(user)
         const tokens = TokenService.generateTokens(userDto)
 
-        await TokenService.saveToken(userDto.id, tokens.refreshToken)
+        await TokenService.saveToken(userDto._id, tokens.refreshToken)
 
         return { ...tokens, user: userDto }
     }
+
     /**
      * Удаление токена с базы данных
      */
@@ -101,6 +127,37 @@ export class Service {
 
         return token
     }
+
+    async refresh(refreshToken: string) {
+        if (!refreshToken) {
+            throw ApiError.UnathorizedError()
+        }
+
+        const userData = TokenService.validateRefreshToken(
+            refreshToken
+        ) as UserDTO
+
+        const tokenFromBD = await TokenService.findToken(refreshToken)
+
+        if (!userData || !tokenFromBD) {
+            throw ApiError.UnathorizedError()
+        }
+
+        const user = await UserModel.findById(userData._id)
+
+        const userDto = returnUserDTO(user as UserDTO)
+
+        const tokens = TokenService.generateTokens(userDto)
+
+        await TokenService.saveToken(userDto?._id, tokens.refreshToken)
+
+        return { ...tokens, user: userDto }
+    }
 }
 
 export const UserService = new Service()
+
+interface ILoginProps {
+    email: string
+    password: string
+}

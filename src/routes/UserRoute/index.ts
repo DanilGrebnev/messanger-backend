@@ -1,36 +1,34 @@
 import { Router } from 'express'
 import { UserController as Controller } from '../../controllers'
+import { authMiddleware } from '../../middlewares/authMiddleware'
 
 export const UserRoute = Router()
 
 const UserController = new Controller()
 
 //Получение всех пользователей
-UserRoute.get('/all_users', UserController.getAll)
+UserRoute.get('/all_users', authMiddleware, UserController.getAllUsers)
 
 //Получение пользователя по id
 UserRoute.get('/:userId', UserController.getOne)
 
-// Активация аккаунта
-UserRoute.get('/activate/:link', UserController.activateAccount)
+//Обновление пользователя по id
+UserRoute.put('/:userId', UserController.updateOneUser)
 
-//Получение refresh токена
-// UserRoute.get('/refresh', UserController.getRefreshToken)
+//Активация аккаунта
+UserRoute.get('/activate/:link', UserController.activateAccount)
 
 //Регистрация пользователя
 UserRoute.post('/registration', UserController.registration)
 
-//Выход из аккаунта
-UserRoute.post('/logout', UserController.logout)
-
 //Авторизация
 UserRoute.post('/login', UserController.login)
 
-//Аутентификация
-// UserRoute.post('/authorization', UserController.authorization)
+//Выход из аккаунта
+UserRoute.post('/logout', UserController.logout)
 
-//Изменение пользователя по id
-UserRoute.put('/:userId', UserController.updateOne)
+//Обновление access токена
+UserRoute.post('/refresh', UserController.refresh)
 
 //Удаление пользователя
 UserRoute.delete('/:userId', UserController.delete)

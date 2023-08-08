@@ -1,11 +1,10 @@
 export interface UserDTO {
+    _id: string
     email: string
     fullName: string
     password: string
-    avatar?: string
-    confirmed?: boolean
-    confirm_hash?: string
+    avatar: string
+    isActivated: boolean
     lastSeen?: string
-    isActivated?: boolean
     activationLink?: string
 }

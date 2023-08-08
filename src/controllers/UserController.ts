@@ -9,10 +9,14 @@ const time15d = 15 * 24 * 60 * 60 * 1000
 
 export class UserController {
     //Получение всех пользователей
-    getAll: TController = (req, res) => {
-        UserModel.find()
-            .then(response => res.send(response))
-            .catch(error => res.send(error))
+    getAllUsers: TController = async (req, res, next) => {
+        try {
+            const allUsers = await UserService.getAllUsers()
+
+            res.json(allUsers)
+        } catch (err) {
+            next(err)
+        }
     }
 
     //Получение одного пользователя
@@ -77,7 +81,7 @@ export class UserController {
         try {
             const { refreshToken } = req.cookies
             const token = await UserService.logout(refreshToken)
-            
+
             res.clearCookie('refreshToken')
 
             res.send(token)
@@ -86,14 +90,36 @@ export class UserController {
         }
     }
 
-    //Обновление одного пользователя по _id
-    updateOne: TController = (req, res) => {
-        const filter = { _id: req.params.userId }
-        const data = req.body
+    //Обновление пользователя по _id
+    updateOneUser: TController = async (req, res, next) => {
+        try {
+            const updatedUser = await UserService.updateOneUser(
+                req.params.userId,
+                req.body
+            )
 
-        UserModel.findOneAndUpdate(filter, data, { new: true })
-            .then(response => res.send(response))
-            .catch(err => res.send(err))
+            res.json(updatedUser)
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    refresh: TController = async (req, res, next) => {
+        try {
+            const { refreshToken } = req.cookies
+
+            const userData = await UserService.refresh(refreshToken)
+
+            res.cookie('refreshToken', userData?.refreshToken, {
+                maxAge: time15d,
+                httpOnly: true,
+                // secure:true - когда будем использовать https протокол
+            })
+
+            res.json(userData)
+        } catch (err) {
+            next(err)
+        }
     }
 
     //Удаление пользователя

@@ -1,10 +1,10 @@
-import { UserDTO } from '../types/DTO/UserDTO'
 import { Schema, model, Document } from 'mongoose'
 import isEmail from 'validator/lib/isEmail'
+import { UserDTO } from '../types/DTO/UserDTO'
 
-type TUserSchema = UserDTO & Document
+interface IUserSchema extends UserDTO {}
 
-const schema = new Schema<TUserSchema>(
+const schema = new Schema<IUserSchema>(
     {
         email: {
             type: String,
@@ -17,18 +17,14 @@ const schema = new Schema<TUserSchema>(
         },
         password: {
             type: String,
-            required: true,
+            required: [true, 'Password is required'],
         },
         fullName: {
             type: String,
-            required: true,
-        },
-        confirmed: {
-            type: Boolean,
-            default: false,
+            required: [true, 'Full name is required'],
         },
         lastSeen: {
-            type: Date,
+            type: String,
             default: new Date(),
         },
         isActivated: {

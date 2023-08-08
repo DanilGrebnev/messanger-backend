@@ -1,4 +1,4 @@
-import { Express, Router } from 'express'
+import { Express } from 'express'
 import { TRouters } from '../types'
 
 type TRouterCombine = (app: Express, routers: TRouters) => void
