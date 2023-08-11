@@ -1,3 +1,5 @@
+export { MessageService } from './MessageService'
+export { DialogService } from './DialogService'
 export { MailService } from './MailService'
 export { UserService } from './UserService'
 export { TokenService } from './TokenService'

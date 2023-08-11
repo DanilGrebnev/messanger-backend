@@ -1,5 +1,4 @@
 export interface DialogDTO {
-    senderId: string
-    receiverId: string
+    members: string[]
     lastMessage?: string
 }

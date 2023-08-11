@@ -1,23 +1,31 @@
 import { TController } from '../types'
-import { DialogModel } from '../models'
 import { DialogDTO } from '../types/DTO'
+import { DialogService } from '../services'
 
 export class DialogController {
-    createDialog: TController = (req, res) => {
-        const { receiverId, senderId }: DialogDTO = req.body
+    createDialog: TController = async (req, res, next) => {
+        try {
+            const { members }: DialogDTO = req.body
 
-        DialogModel.create({ members: [receiverId, senderId] })
-            .then(response => res.send(response))
-            .catch(err => res.send(err))
+            const dialog = await DialogService.createDialog(members)
+
+            res.json(dialog)
+        } catch (err) {
+            next(err)
+        }
     }
     /**
      * Поиск дилогов в которых участвует пользователь
      */
-    getDialog: TController = async (req, res) => {
-        const filter = { members: { $in: [req.params.id] } }
+    getDialog: TController = async (req, res, next) => {
+        try {
+            const userId = req.params.userId
 
-        DialogModel.find(filter)
-            .then(data => res.send(data))
-            .catch(err => res.send(err))
+            const dialogs = await DialogService.getDialogs(userId)
+
+            res.json(dialogs)
+        } catch (err) {
+            next(err)
+        }
     }
 }

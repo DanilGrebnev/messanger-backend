@@ -1,9 +1,9 @@
 import { DialogDTO } from '../types/DTO/DialogDTO'
 import { Schema, model, Document } from 'mongoose'
 
-// type TDialogSchema = DialogDTO & Document
+interface ISchema extends DialogDTO {}
 
-const schema = new Schema(
+const schema = new Schema<ISchema>(
     {
         members: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
         lastMessage: { type: Schema.Types.ObjectId, ref: 'Message' },

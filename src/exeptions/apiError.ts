@@ -12,7 +12,11 @@ export class ApiError extends Error {
         return new ApiError(401, 'Пользователь не авторизован')
     }
 
-    static BadRequest(message?: any, errors?: any) {
+    static BadRequest(message?: any, errors: any = []) {
         return new ApiError(400, message, errors)
+    }
+
+    static NotFound() {
+        return new ApiError(404, 'Элемент не найден')
     }
 }
